@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import com.devsuperior.dsmeta.dto.SellerSumDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
@@ -32,6 +34,14 @@ public class SaleService {
 		LocalDate initialDate = minDate.isEmpty() ? finalDate.minusYears(1) : LocalDate.parse(minDate);
 
 		List<SellerSumDTO> result = repository.searchBySummary(initialDate, finalDate);
+		return result;
+	}
+
+	public Page<SaleMinDTO> salesReport(String minDate, String maxDate, String name, Pageable pageable) {
+		LocalDate finalDate = maxDate.isEmpty() ? LocalDate.now(ZoneId.systemDefault()) : LocalDate.parse(maxDate);
+		LocalDate initialDate = minDate.isEmpty() ? finalDate.minusYears(1) : LocalDate.parse(minDate);
+
+		Page<SaleMinDTO> result = repository.searchByReport(initialDate,finalDate, name, pageable);
 		return result;
 	}
 }
